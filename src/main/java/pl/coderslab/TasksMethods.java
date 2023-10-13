@@ -16,7 +16,6 @@ public class TasksMethods {
     public static ArrayList<String> loadWholeFile() {
 
         ArrayList<String> tasksList;
-
         if (!Files.exists(path)) {
             try {
                 Files.createFile(path);
@@ -24,7 +23,6 @@ public class TasksMethods {
                 throw new RuntimeException(e);
             }
         }
-
         try {
             tasksList = new ArrayList<>(Files.readAllLines(path));
         } catch (IOException e) {
@@ -35,6 +33,7 @@ public class TasksMethods {
 
     public static void listingExistingTasks(ArrayList<String> list) {
         System.out.println();
+        System.out.println(" ID  | Task description | Due date | isImportant?");
         for (Object singleTask : list) {
             System.out.println(ConsoleColors.BLUE + list.indexOf(singleTask) + ": " + singleTask);
         }
@@ -64,7 +63,7 @@ public class TasksMethods {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        originalListOfTasks.add("\n" + newTaskDescription + ", " + newTaskDate + ", " + newTaskImportance);
+        originalListOfTasks.add(newTaskDescription + ", " + newTaskDate + ", " + newTaskImportance + "\n");
         return originalListOfTasks;
     }
 

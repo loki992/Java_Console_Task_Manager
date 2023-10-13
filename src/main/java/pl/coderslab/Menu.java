@@ -17,7 +17,11 @@ public class Menu {
         Scanner scanner = new Scanner(System.in);
         String menuChoiceTemp = scanner.nextLine();
         try {
-            return Integer.parseInt(menuChoiceTemp);
+            if (Integer.parseInt(menuChoiceTemp)<4){
+                return Integer.parseInt(menuChoiceTemp);
+            } else {
+                throw new NumberFormatException();
+            }
         } catch (NumberFormatException e) {
             if (menuChoiceTemp.trim().equalsIgnoreCase("add") || menuChoiceTemp.trim().equalsIgnoreCase("a")) {
                 return 0;
