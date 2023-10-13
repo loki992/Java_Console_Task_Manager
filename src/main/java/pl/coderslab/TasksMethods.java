@@ -4,21 +4,28 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 
 public class TasksMethods {
 
-    public static void listingExistingTasks() {
-        System.out.println();
+    public static ArrayList<String> loadWholeFile () {
         Path path = Paths.get("tasks.csv");
+        ArrayList<String> tasksList;
         try {
-            for (String line : Files.readAllLines(path)) {
-                System.out.println(line);
-            }
+            tasksList = new ArrayList<>(Files.readAllLines(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        return tasksList;
+    }
+
+    public static void listingExistingTasks(ArrayList<String> list) {
+        System.out.println();
+        for (Object singleTask : list) {
+            System.out.println(list.indexOf(singleTask)+": "+singleTask);
         }
         System.out.println();
     }
@@ -51,7 +58,11 @@ public class TasksMethods {
 
     }
 
-    public static void removingExistingTask() {
+    public static ArrayList<String> removingExistingTask(ArrayList<String> originalListOfTasks) {
         System.out.println("removing existing task");
+        Scanner scannIndexToRemove = new Scanner(System.in);
+        int indexToRemove = Integer.parseInt(scannIndexToRemove.nextLine());
+        originalListOfTasks.remove(indexToRemove);
+        return originalListOfTasks;
     }
 }

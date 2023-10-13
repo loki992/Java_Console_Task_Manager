@@ -1,7 +1,10 @@
 package pl.coderslab;
 
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
+        ArrayList<String> loadedList = TasksMethods.loadWholeFile();
         System.out.println();
         System.out.println("<------Console Task Manager------>");
         while(true) {
@@ -11,10 +14,10 @@ public class Main {
                     TasksMethods.addingNewTask();
                     break;
                 case 2:
-                    TasksMethods.removingExistingTask();
+                    TasksMethods.removingExistingTask(loadedList);
                     break;
                 case 3:
-                    TasksMethods.listingExistingTasks();
+                    TasksMethods.listingExistingTasks(loadedList);
                     break;
                 case 4:
                     System.exit(0);
