@@ -7,20 +7,21 @@ public class Main {
         ArrayList<String> loadedList = TasksMethods.loadWholeFile();
         System.out.println();
         System.out.println("<------Console Task Manager------>");
-        while(true) {
+        while (true) {
             Menu.openMenu();
-            switch (Menu.choosingMenuOption()){
-                case 1:
-                    TasksMethods.addingNewTask();
+            switch (Menu.choosingMenuOption()) {
+                case 0:
+                    TasksMethods.addingNewTask(loadedList);
                     break;
-                case 2:
+                case 1:
                     TasksMethods.removingExistingTask(loadedList);
                     break;
-                case 3:
+                case 2:
                     TasksMethods.listingExistingTasks(loadedList);
                     break;
-                case 4:
+                case 3:
                     System.exit(0);
+                    break;
             }
         }
     }

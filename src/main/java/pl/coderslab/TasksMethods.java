@@ -10,10 +10,21 @@ import java.util.Scanner;
 import static java.nio.file.StandardOpenOption.APPEND;
 
 public class TasksMethods {
+    static Path path = Paths.get("tasks.csv");
 
-    public static ArrayList<String> loadWholeFile () {
-        Path path = Paths.get("tasks.csv");
+
+    public static ArrayList<String> loadWholeFile() {
+
         ArrayList<String> tasksList;
+
+        if (!Files.exists(path)) {
+            try {
+                Files.createFile(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         try {
             tasksList = new ArrayList<>(Files.readAllLines(path));
         } catch (IOException e) {
@@ -25,13 +36,13 @@ public class TasksMethods {
     public static void listingExistingTasks(ArrayList<String> list) {
         System.out.println();
         for (Object singleTask : list) {
-            System.out.println(list.indexOf(singleTask)+": "+singleTask);
+            System.out.println(ConsoleColors.BLUE + list.indexOf(singleTask) + ": " + singleTask);
         }
         System.out.println();
     }
 
-    public static void addingNewTask() {
-        System.out.println("adding new task");
+    public static ArrayList<String> addingNewTask(ArrayList<String> originalListOfTasks) {
+        System.out.println(ConsoleColors.GREEN + "adding new task");
         System.out.println("New task description:");
         Scanner scannerAddingTask = new Scanner(System.in);
         String newTaskDescription = scannerAddingTask.nextLine();
@@ -46,23 +57,47 @@ public class TasksMethods {
             newTaskImportance = false;
         } else {
             System.out.println("Wrong input, going back to menu");
-            return;
+            return originalListOfTasks;
         }
-        Path path = Paths.get("tasks.csv");
         try {
-            Files.writeString(path, "\n" + newTaskDescription + ", " + newTaskDate + ", " + newTaskImportance, APPEND);
+            Files.writeString(path, newTaskDescription + ", " + newTaskDate + ", " + newTaskImportance + "\n", APPEND);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
+        originalListOfTasks.add("\n" + newTaskDescription + ", " + newTaskDate + ", " + newTaskImportance);
+        return originalListOfTasks;
     }
 
     public static ArrayList<String> removingExistingTask(ArrayList<String> originalListOfTasks) {
-        System.out.println("removing existing task");
+
+        System.out.println(ConsoleColors.RED + "Provide task id to remove or -1 to go back: ");
         Scanner scannIndexToRemove = new Scanner(System.in);
-        int indexToRemove = Integer.parseInt(scannIndexToRemove.nextLine());
-        originalListOfTasks.remove(indexToRemove);
-        return originalListOfTasks;
+        int indexToRemove = -1;
+        try {
+            indexToRemove = Integer.parseInt(scannIndexToRemove.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Please provide number");
+            return removingExistingTask(originalListOfTasks);
+        }
+        if (0 <= indexToRemove && indexToRemove < originalListOfTasks.size()) {
+            originalListOfTasks.remove(indexToRemove);
+            try {
+                for (String task : originalListOfTasks) {
+                    Files.writeString(path, task);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return originalListOfTasks;
+        } else if (indexToRemove == -1) {
+            System.out.println("Going back");
+            return originalListOfTasks;
+        } else {
+            System.out.println("Wrong id, going back");
+            return originalListOfTasks;
+        }
+
+
     }
+
 }
